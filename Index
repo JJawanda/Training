@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Training</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        header {
+            background-color: #007BFF;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        .answers {
+            list-style-type: none;
+            padding: 0;
+        }
+        .answers li {
+            margin-bottom: 10px;
+        }
+        button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 10px 0;
+            background-color: #007BFF;
+            color: white;
+        }
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .quiz-header img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Welcome to the Online Training Platform</h1>
+    </header>
+    <div class="container">
+        <div class="quiz-header">
+            <img src="https://via.placeholder.com/800x200.png?text=Your+Training+Banner" alt="Training Banner">
+        </div>
+        <h2>Test Your Knowledge</h2>
+        <div id="quiz"></div>
+        <button id="submit">Submit</button>
+        <div id="results"></div>
+    </div>
+    <footer>
+        <p>&copy; 2025 Online Training Platform. All rights reserved.</p>
+    </footer>
+    <script>
+        const questions = [
+            {
+                question: "Question 1: What is the capital of France?",
+                answers: ["Paris", "London", "Berlin", "Rome"],
+                correct: 0
+            },
+            {
+                question: "Question 2: What is 2 + 2?",
+                answers: ["3", "4", "5", "6"],
+                correct: 1
+            }
+            // Add more questions here
+        ];
+
+        function buildQuiz() {
+            const quizContainer = document.getElementById('quiz');
+            const output = [];
+
+            questions.forEach((q, index) => {
+                const answers = q.answers.map((answer, i) => 
+                    `<li>
+                        <label>
+                            <input type="radio" name="question${index}" value="${i}"> ${answer}
+                        </label>
+                    </li>`
+                ).join('');
+
+                output.push(
+                    `<div class="question">
+                        <h2>${q.question}</h2>
+                        <ul class="answers">${answers}</ul>
+                    </div>`
+                );
+            });
+
+            quizContainer.innerHTML = output.join('');
+        }
+
+        function showResults() {
+            const answerContainers = document.querySelectorAll('.answers');
+            let numCorrect = 0;
+
+            questions.forEach((q, index) => {
+                const selected = (answerContainers[index].querySelector('input[name=question' + index + ']:checked') || {}).value;
+
+                if (parseInt(selected) === q.correct) {
+                    numCorrect++;
+                }
+            });
+
+            const resultsContainer = document.getElementById('results');
+            const passingScore = Math.ceil(questions.length * 0.7); // 70% to pass
+
+            if (numCorrect >= passingScore) {
+                resultsContainer.innerHTML = `<h2 style="color: green;">Pass! You answered ${numCorrect} out of ${questions.length} correctly.</h2>`;
+            } else {
+                resultsContainer.innerHTML = `<h2 style="color: red;">Fail. You answered ${numCorrect} out of ${questions.length} correctly.</h2>`;
+            }
+        }
+
+        document.getElementById('submit').addEventListener('click', showResults);
+
+        buildQuiz();
+    </script>
+</body>
+</html>
